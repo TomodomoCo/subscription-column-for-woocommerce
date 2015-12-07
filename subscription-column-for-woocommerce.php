@@ -3,7 +3,7 @@
 Plugin Name: Subscription Column for WooCommerce
 Plugin URI: https://www.vanpattenmedia.com/
 Description: View information about an order's parent subscription on the WooCommerce orders page
-Version: 1.0.0
+Version: 1.0.1
 Author: Van Patten Media Inc.
 Author URI: https://www.vanpattenmedia.com/
 License: GPL2
@@ -76,26 +76,6 @@ class SubColumnForWooCommerce {
 	}
 
 	/**
-	 * Reimplement subscription price string function
-	 *
-	 * Get the details of the subscription for use with @see wcs_price_string()
-	 *
-	 * @return array
-	 */
-	function get_price_string_details( $subscription, $amount = 0, $display_ex_tax_label = false ) {
-
-		$subscription_details = array(
-			'currency'              => $subscription->get_order_currency(),
-			'recurring_amount'      => $amount,
-			'subscription_period'   => $subscription->billing_period,
-			'subscription_interval' => $subscription->billing_interval,
-			'display_ex_tax_label'  => $display_ex_tax_label,
-		);
-
-		return apply_filters( 'woocommerce_subscription_price_string_details', $subscription_details, $this );
-	}
-
-	/**
 	 * Render the subscription information
 	 * 
 	 * @param $subscription WC_Subscription
@@ -105,7 +85,7 @@ class SubColumnForWooCommerce {
 		$data = array(
 			'schedule' => array(
 				'label' => __( 'Schedule', 'subcolumnforwoocommerce' ),
-				'value' => wcs_price_string( $this->get_price_string_details( $subscription, $subscription->get_total() ) ),
+				'value' => $subscription->get_formatted_order_total(),
 			),
 			'next_payment' => array(
 				'label' => __( 'Next Payment', 'subcolumnforwoocommerce' ),
