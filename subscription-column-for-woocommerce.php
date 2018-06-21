@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Subscription Column for WooCommerce
-Plugin URI: https://www.vanpattenmedia.com/
+Plugin URI: https://tomodomo.co/
 Description: View information about an order's parent subscription on the WooCommerce orders page
-Version: 1.0.1
-Author: Van Patten Media Inc.
-Author URI: https://www.vanpattenmedia.com/
+Version: 1.0.2
+Author: Tomodomo
+Author URI: https://tomodomo.co/
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: subcolumnforwoocommerce
@@ -54,20 +54,20 @@ class SubColumnForWooCommerce {
 	public function render_shop_order_columns( $column ) {
 		global $post, $woocommerce, $the_order;
 
-		if ( empty( $the_order ) || $the_order->id != $post->ID ) {
+		if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
 			$the_order = wc_get_order( $post->ID );
 		}
 
 		switch ( $column ) {
 			case 'order_subscription' :
 
-				$subscriptions = wcs_get_subscriptions_for_order( $the_order->id, array( 'order_type' => array( 'parent', 'renewal' ) ) );
+				$subscriptions = wcs_get_subscriptions_for_order( $the_order->get_id(), array( 'order_type' => array( 'parent', 'renewal' ) ) );
 
 				if ( count( $subscriptions ) === 0 )
 					return;
 
 				foreach ( $subscriptions as $subscription ) {
-					echo '<p><a href="' . get_edit_post_link( $subscription->id ) . '" class="button">' . __( 'View subscription', 'subcolumnforwoocommerce' ) . '</a></p>';
+					echo '<p><a href="' . get_edit_post_link( $subscription->get_id() ) . '" class="button">' . __( 'View subscription', 'subcolumnforwoocommerce' ) . '</a></p>';
 					echo $this->render_subscriptions_info( $subscription );
 				}
 
@@ -77,7 +77,7 @@ class SubColumnForWooCommerce {
 
 	/**
 	 * Render the subscription information
-	 * 
+	 *
 	 * @param $subscription WC_Subscription
 	 * @return string
 	 */
